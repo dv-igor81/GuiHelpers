@@ -1,0 +1,48 @@
+﻿<Window x:Class="Demo.WPF.GUI.IntegerDemoWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="clr-namespace:Demo.WPF"
+        mc:Ignorable="d"
+        Title="IntegerDemoWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Grid.Row="0" Height="Auto"></RowDefinition>
+            <RowDefinition Grid.Row="1"></RowDefinition>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Orientation="Horizontal" >
+            <StackPanel Orientation="Vertical" Width="Auto" Margin="5">
+                <Label Content="Текст == 10 символов"/>
+                <TextBox x:Name="TextBoxTextLineHelper"/>
+            </StackPanel>
+            <StackPanel Orientation="Vertical" Width="Auto" Margin="5">
+                <Label Content="Текст == 5 символов"/>
+                <TextBox x:Name="TextBoxTextLineHelper2"/>
+            </StackPanel>
+        </StackPanel>
+        <Grid Grid.Row="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Grid.Column="0"></ColumnDefinition>
+                    <ColumnDefinition Grid.Column="1" Width="Auto"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Label x:Name="LabelDisplay" Grid.Column="0" Content="" Background="LightGray"/>
+                <StackPanel Grid.Column="1" Orientation="Vertical" >
+                    <StackPanel Orientation="Vertical" Width="Auto" Margin="5">
+                        <Label Content="Целое число от -128 до +128"/>
+                        <TextBox x:Name="TextBoxTextHelperInteger"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical" Width="Auto" Margin="5">
+                        <Label Content="Целое число от 50 до 256"/>
+                        <TextBox x:Name="TextBoxTextHelperInteger2"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical" Width="Auto" Margin="5">
+                        <Label Content="Целое число от -256 до -50"/>
+                        <TextBox x:Name="TextBoxTextHelperInteger3"/>
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>

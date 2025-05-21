@@ -1,0 +1,26 @@
+﻿<Window x:Class="Demo.WPF.GUI.ThreadDemoWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="clr-namespace:Demo.WPF.GUI"
+        mc:Ignorable="d"
+        Title="ThreadDemoWindow" Height="150" Width="800">
+    <Grid Background="Beige">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Grid.Column="0" Width="2*"/>
+            <ColumnDefinition Grid.Column="1" Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Label Grid.Column="0" 
+               VerticalContentAlignment="Center" 
+               HorizontalContentAlignment="Center"
+               Content="Режим работы"
+               FontSize="18" 
+               Background="White" 
+               Name="DisplayMode"></Label>
+        <Button Grid.Column="1" 
+                Content="Старт" 
+                FontSize="18"
+                Height="50" Name="StartStop"></Button>
+    </Grid>
+</Window>
