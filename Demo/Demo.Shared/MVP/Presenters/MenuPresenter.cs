@@ -5,6 +5,8 @@ namespace GuiHelpers.Demo.MVP.Presenters;
 
 public class MenuPresenter
 {
+    #region Private Fields
+
     private readonly IWindowWrapper _menuWindow;
     private readonly IButtonWrapper _intHelperButton;
     private readonly IButtonWrapper _threadHelperButton;
@@ -17,43 +19,42 @@ public class MenuPresenter
     /// Текущее дочернее окно (если есть)
     /// </summary>
     private IWindowWrapper? _currentChildWindow;
+
+    #endregion
+
+    #region Constructor
     
     public MenuPresenter(
         IMenuView view, 
         IApplicationController appController)
     {
+        // Сохранение
         _menuWindow = view.Window;
         _intHelperButton = view.IntHelperButton;
         _threadHelperButton = view.ThreadHelperButton;
         _hideMenuCheckBox = view.HideMenuCheckBox;
         _closeFormButton = view.CloseFormButton;
-        
         _appController = appController;
         
-        _currentChildWindow = null;
-        
+        // Настройка
+        _menuWindow.Show();
+        _menuWindow.Activate();
+        _menuWindow.ToCenterOfScreen();
         _menuWindow.SetCapture("Меню");
         _hideMenuCheckBox.Checked = true;
+        _currentChildWindow = null;
         
+        // Подпись на события
         _menuWindow.ClosingEvent += WindowOnClosingEvent;
         _intHelperButton.Click += IntHelperButtonOnClick;
         _threadHelperButton.Click += ThreadHelperButtonOnClick;
         _closeFormButton.Click += CloseFormButtonOnClick;
-        
         _appController.ExitEvent += AppControllerOnExitEvent;
     }
     
-    private void CloseFormButtonOnClick(object sender)
-    {
-        if (_currentChildWindow != null)
-        {  // Есть форма, которую можно закрыть
-            _currentChildWindow.Close();
-        }
-        else
-        { // Закрыть основную форму
-            _menuWindow.Close();
-        }
-    }
+    #endregion
+
+    #region Private Event Handlers
 
     private bool WindowOnClosingEvent()
     {
@@ -64,7 +65,7 @@ public class MenuPresenter
         }
         return false; // Закрыть основную форму
     }
-
+    
     private void IntHelperButtonOnClick(object sender)
     {
         if (CreateWindowsCore())
@@ -80,7 +81,28 @@ public class MenuPresenter
             _currentChildWindow = _appController.RunThreadHelperDemo(_hideMenuCheckBox.Checked);
         }
     }
+    
+    private void CloseFormButtonOnClick(object sender)
+    {
+        if (_currentChildWindow != null)
+        {  // Есть форма, которую можно закрыть
+            _currentChildWindow.Close();
+        }
+        else
+        { // Закрыть основную форму
+            _menuWindow.Close();
+        }
+    }
+    
+    private void AppControllerOnExitEvent(object sender)
+    {
+        _currentChildWindow = null; // Нет формы, которую можно закрыть
+    }
 
+    #endregion
+    
+    #region Private Methods
+    
     private bool CreateWindowsCore()
     {
         if (_currentChildWindow == null) return true;
@@ -89,8 +111,5 @@ public class MenuPresenter
         return false; // Предотвратить повторное открытие формы
     }
     
-    private void AppControllerOnExitEvent(object sender)
-    {
-        _currentChildWindow = null; // Нет формы, которую можно закрыть
-    }
+    #endregion
 }

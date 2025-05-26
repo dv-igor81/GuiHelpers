@@ -35,8 +35,6 @@ public partial class MenuWindow : IMenuView
         ThreadHelperButton = new WButtonWrapper(ThreadHelper);
         HideMenuCheckBox = new WCheckBoxWrapper(HideMenu);
         CloseFormButton = new WButtonWrapper(CloseForm);
-        
-        Window.ToCenterOfScreen();
     }
     
     #endregion

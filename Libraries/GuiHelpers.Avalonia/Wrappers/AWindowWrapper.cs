@@ -1,17 +1,21 @@
-﻿using System;
-using System.ComponentModel;
-using System.Windows;
-using System.Windows.Forms;
-using System.Windows.Shapes;
+﻿using System.ComponentModel;
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Platform;
+using Avalonia.Threading;
 using Wrappers;
 
-namespace GuiHelpers.WPF.Wrappers;
+namespace GuiHelpers.Avalonia.Wrappers;
 
-public class WWindowWrapper : IWindowWrapper
+public delegate void MyAction();
+
+public class AWindowWrapper : IWindowWrapper
 {
     #region Private Fields
     
     private readonly Window _window;
+    
+    private readonly Dispatcher _dispatcher;
     
     #endregion
     
@@ -34,19 +38,20 @@ public class WWindowWrapper : IWindowWrapper
     ///     находится не в том потоке, в котором был
     ///     создан элемент управления.
     /// </summary>
-    public bool InvokeRequired => !_window.Dispatcher.CheckAccess();
+    public bool InvokeRequired => !_dispatcher.CheckAccess();
     
     #endregion
     
     #region Constructor
     
-    public WWindowWrapper(Window window)
+    public AWindowWrapper(Window window)
     {
         _window = window;
+        _dispatcher = Dispatcher.UIThread;
         _window.Closing += WindowOnClosing;
     }
 
-    private void WindowOnClosing(object sender, CancelEventArgs e)
+    private void WindowOnClosing(object? sender, CancelEventArgs e)
     {
         if (ClosingEvent == null)
         {
@@ -94,13 +99,15 @@ public class WWindowWrapper : IWindowWrapper
     /// </summary>
     public void ToCenterOfScreen()
     {
-        // Нужны ссылки на сборки:
-        // 1) System.Windows.Forms;
-        // 2) System.Drawing.
-        Screen screen = Screen.PrimaryScreen;
-        System.Drawing.Rectangle screenBounds = screen.WorkingArea;
-        _window.Left = (screenBounds.Width - _window.Width) / 2; 
-        _window.Top = (screenBounds.Height - _window.Height) / 2;
+        Screen? screen = _window.Screens.Primary;
+        if (screen != null)
+        {
+            int screenWidth = screen.Bounds.Width;
+            int screenHeight = screen.Bounds.Height;
+            _window.Position = new PixelPoint(
+                (int)(screenWidth - _window.Width) / 2,
+                (int)(screenHeight - _window.Height) / 2);
+        }
     }
 
     /// <summary>
@@ -110,7 +117,9 @@ public class WWindowWrapper : IWindowWrapper
     /// <returns></returns>
     public void Invoke(Delegate method)
     {
-        _window.Dispatcher.Invoke(method);
+        //_dispatcher.InvokeAsync((Action)method).Wait();
+        InvokeHelper helper = new InvokeHelper(method);
+        _dispatcher.InvokeAsync(helper.RunMethod).Wait();
     }
 
     /// <summary>
@@ -120,8 +129,24 @@ public class WWindowWrapper : IWindowWrapper
     /// <returns></returns>
     public void BeginInvoke(Delegate method)
     {
-        _window.Dispatcher.BeginInvoke(method);
+        //_dispatcher.Post((Action)method);
+        InvokeHelper helper = new InvokeHelper(method);
+        _dispatcher.Post(helper.RunMethod);
     }
     
     #endregion
+}
+
+class InvokeHelper
+{
+    private readonly Delegate _method;
+    public InvokeHelper(Delegate method)
+    {
+        _method = method;
+    }
+
+    public void RunMethod()
+    {
+        _method.DynamicInvoke();
+    }
 }

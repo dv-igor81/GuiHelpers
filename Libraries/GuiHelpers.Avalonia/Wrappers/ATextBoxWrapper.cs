@@ -1,13 +1,15 @@
-﻿using System;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
-using GuiHelpers.WPF.GuiHelpers;
+﻿using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
+using Avalonia.Input;
+using Avalonia.Interactivity;
+using Avalonia.Media;
+using Avalonia.Styling;
+using GuiHelpers.Avalonia.GuiHelpers;
 using Wrappers;
 
-namespace GuiHelpers.WPF.Wrappers;
+namespace GuiHelpers.Avalonia.Wrappers;
 
-public class WTextBoxWrapper : WSharedWrapper, ITextBoxWrapper
+public class ATextBoxWrapper : ASharedWrapper, ITextBoxWrapper
 {
     #region Private Fields
 
@@ -42,13 +44,17 @@ public class WTextBoxWrapper : WSharedWrapper, ITextBoxWrapper
 
     #region Constructor
 
-    public WTextBoxWrapper(TextBox textBox)
+    public ATextBoxWrapper(TextBox textBox)
     {
         _textBox = textBox;
+        
+        // ===>> Стили ===>>
+        TextBoxStyleHelpers.AddDefaultStyles(_textBox);
+        // <<=== Стили <<===
+        
         _textBox.TextAlignment = TextAlignment.Center;
         _textBox.IsReadOnly = true;
-        _textBox.IsReadOnlyCaretVisible = true;
-        _textBox.CaretBrush = WColorConverter.GuiToColor(GuiColor.Black);
+        _textBox.CaretBrush = AColorConverter.GuiToColor(GuiColor.Black);
         CurrentSymbol = '\0';
         // По умолчанию компонент не только для чтения, но и для редактирования
         IsReadOnly = false;
@@ -58,7 +64,7 @@ public class WTextBoxWrapper : WSharedWrapper, ITextBoxWrapper
 
     #region Destructor
 
-    ~WTextBoxWrapper()
+    ~ATextBoxWrapper()
     {
         SubscribeToEvents(false);
     }
@@ -67,31 +73,7 @@ public class WTextBoxWrapper : WSharedWrapper, ITextBoxWrapper
     
     #region Event Handlers
     
-    private void _textBox_PreviewKeyDown(object sender, KeyEventArgs e)
-    {
-        switch (e.Key)
-        {
-            case Key.Back:
-                CurrentSymbol = BackKey;
-                break;
-            case Key.Delete:
-                CurrentSymbol = DelKey;
-                break;
-            case Key.Space:
-                CurrentSymbol = ' ';
-                break;
-        }
-        switch (e.Key)
-        {
-            case Key.Back:
-            case Key.Delete:
-            case Key.Space:
-                NewSymbolEvent?.Invoke();
-                break;
-        }
-    }
-    
-    private void _textBox_KeyUp(object sender, KeyEventArgs e)
+    private void _textBox_KeyDown(object? sender, KeyEventArgs e)
     {
         switch (e.Key)
         {
@@ -103,21 +85,39 @@ public class WTextBoxWrapper : WSharedWrapper, ITextBoxWrapper
                 break;
         }
     }
+
+    private void textBox_PreviewKeyDown(object sender, KeyEventArgs e)
+    {
+        switch (e.Key)
+        {
+            case Key.Back:
+                CurrentSymbol = BackKey;
+                //NewSymbolEvent?.Invoke();
+                //SetText("13");
+                //SetSelectionStart(1);
+                RaiseNewSymbolEvent();
+                break;
+            case Key.Delete:
+                CurrentSymbol = DelKey;
+                RaiseNewSymbolEvent();
+                break;
+        }
+    }
     
-    private void TextBoxOnPreviewTextInput(object sender, TextCompositionEventArgs e)
+    private void textBox_TextInput(object sender, TextInputEventArgs e)
     {
         if (e.Text == null) return;
         if (e.Text.Length != 1) return;
         CurrentSymbol = e.Text[0];
         NewSymbolEvent?.Invoke();
     }
-
-    private void _textBox_LostFocus(object sender, EventArgs e)
+    
+    private void _textBox_LostFocus(object? sender, EventArgs e)
     {
         LostFocusEvent?.Invoke(this);
     }
     
-    private void _textBox_GotFocus(object sender, EventArgs e)
+    private void _textBox_GotFocus(object? sender, EventArgs e)
     {
         GotFocusEvent?.Invoke(this);
     }
@@ -148,11 +148,11 @@ public class WTextBoxWrapper : WSharedWrapper, ITextBoxWrapper
 
     public int SelectionStart
     {
-        get => _textBox.SelectionStart;
-        set => _textBox.SelectionStart = value;
+        get => GetSelectionStart();
+        set => SetSelectionStart(value);
     }
 
-    public int SelectionLength => _textBox.SelectionLength;
+    public int SelectionLength => Math.Abs(_textBox.SelectionEnd - _textBox.SelectionStart);
 
     public bool IsEnabled
     {
@@ -168,14 +168,14 @@ public class WTextBoxWrapper : WSharedWrapper, ITextBoxWrapper
     
     public GuiColor BackColor
     {
-        get => WColorConverter.ColorToGui(_textBox.Background);
-        set => _textBox.Background = WColorConverter.GuiToColor(value);
+        get => AColorConverter.ColorToGui(_textBox.Background);
+        set => _textBox.Background = AColorConverter.GuiToColor(value);
     }
 
     public GuiColor ForeColor
     {
-        get => WColorConverter.ColorToGui(_textBox.Foreground);
-        set => _textBox.Foreground = WColorConverter.GuiToColor(value);
+        get => AColorConverter.ColorToGui(_textBox.Foreground);
+        set => _textBox.Foreground = AColorConverter.GuiToColor(value);
     }
 
     #endregion
@@ -202,18 +202,22 @@ public class WTextBoxWrapper : WSharedWrapper, ITextBoxWrapper
 
     protected override void Subscribe()
     {
-        _textBox.PreviewKeyDown += _textBox_PreviewKeyDown;
-        _textBox.KeyUp += _textBox_KeyUp;
-        _textBox.PreviewTextInput += TextBoxOnPreviewTextInput;
+        _textBox.KeyDown += _textBox_KeyDown;
+        
+        _textBox.AddHandler(InputElement.TextInputEvent, textBox_TextInput!, RoutingStrategies.Tunnel);
+        _textBox.AddHandler(InputElement.KeyDownEvent, textBox_PreviewKeyDown!, RoutingStrategies.Tunnel);
+        
         _textBox.LostFocus += _textBox_LostFocus;
         _textBox.GotFocus += _textBox_GotFocus;
     }
     
     protected override void Unsubscribe()
     {
-        _textBox.PreviewKeyDown -= _textBox_PreviewKeyDown;
-        _textBox.KeyUp -= _textBox_KeyUp;
-        _textBox.PreviewTextInput -= TextBoxOnPreviewTextInput;
+        _textBox.KeyDown -= _textBox_KeyDown;
+        
+        _textBox.RemoveHandler(InputElement.TextInputEvent, textBox_TextInput!);
+        _textBox.RemoveHandler(InputElement.KeyDownEvent, textBox_PreviewKeyDown!);
+        
         _textBox.LostFocus -= _textBox_LostFocus;
         _textBox.GotFocus -= _textBox_GotFocus;
     }
@@ -221,6 +225,18 @@ public class WTextBoxWrapper : WSharedWrapper, ITextBoxWrapper
     #endregion
     
     #region Private Methods
+
+    private int GetSelectionStart()
+    {
+        return Math.Min(_textBox.SelectionEnd, _textBox.SelectionStart);
+    }
+    
+    private void SetSelectionStart(int value)
+    {
+        _textBox.CaretIndex = value;
+        _textBox.SelectionEnd = value;
+        _textBox.SelectionStart = value;
+    }
     
     private void SetText(string? text)
     {
@@ -229,16 +245,37 @@ public class WTextBoxWrapper : WSharedWrapper, ITextBoxWrapper
     
     private void CursorNext()
     {
+        if (_textBox.Text == null) return;
         if (_textBox.CaretIndex >= _textBox.Text.Length) return;
         _textBox.CaretIndex++;
-        _textBox.SelectionLength = 0;
     }
 
     private void CursorPrevious()
     {
+        if (_textBox.Text == null) return;
         if (_textBox.CaretIndex <= 0) return;
         _textBox.CaretIndex--;
-        _textBox.SelectionLength = 0;
+    }
+    
+    /// <summary>
+    /// Вызвать событие, исправляя баг удаления символов,
+    /// в случаях когда текст ВЫДЕЛЕН.
+    /// </summary>
+    private void RaiseNewSymbolEvent()
+    {
+        if (_textBox.Text != null)
+        {
+            int length = _textBox.Text.Length;
+            int savedStartPosition = GetSelectionStart();
+            int savedSelectionLength = SelectionLength;
+            _textBox.SelectionStart = length;
+            _textBox.SelectionEnd = length;
+            _textBox.SelectionStart = 0;
+            _textBox.SelectionEnd = 0;
+            _textBox.SelectionStart = savedStartPosition;
+            _textBox.SelectionEnd = savedStartPosition + savedSelectionLength;
+            NewSymbolEvent?.Invoke();
+        }
     }
     
     #endregion

@@ -1,10 +1,10 @@
-﻿using System.Windows.Controls;
-using GuiHelpers.WPF.GuiHelpers;
+﻿using Avalonia.Controls;
+using GuiHelpers.Avalonia.GuiHelpers;
 using Wrappers;
 
-namespace GuiHelpers.WPF.Wrappers;
+namespace GuiHelpers.Avalonia.Wrappers;
 
-public class WLabelWrapper : WSharedWrapper, ILabelWrapper
+public class ALabelWrapper : ASharedWrapper, ILabelWrapper
 {
     #region Private Fields
 
@@ -14,7 +14,7 @@ public class WLabelWrapper : WSharedWrapper, ILabelWrapper
 
     #region Constructor
 
-    public WLabelWrapper(Label label)
+    public ALabelWrapper(Label label)
     {
         _label = label;
     }
@@ -37,25 +37,25 @@ public class WLabelWrapper : WSharedWrapper, ILabelWrapper
     
     public GuiColor BackColor
     {
-        get => WColorConverter.ColorToGui(_label.Background);
-        set => _label.Background = WColorConverter.GuiToColor(value);
+        get => AColorConverter.ColorToGui(_label.Background);
+        set => _label.Background = AColorConverter.GuiToColor(value);
     }
 
     public GuiColor ForeColor
     {
-        get => WColorConverter.ColorToGui(_label.Foreground);
-        set => _label.Foreground = WColorConverter.GuiToColor(value);
+        get => AColorConverter.ColorToGui(_label.Foreground);
+        set => _label.Foreground = AColorConverter.GuiToColor(value);
     }
 
     #endregion
     
     protected override void Subscribe()
     {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException();
     }
 
     protected override void Unsubscribe()
     {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException();
     }
 }

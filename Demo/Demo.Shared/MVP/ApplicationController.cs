@@ -47,10 +47,7 @@ public class ApplicationController : IApplicationController
         var formIntegerDemo = _viewLoader.CreateIntegerDemoView();
         IWindowWrapper window = formIntegerDemo.Window;
         var unused = new IntegerDemoPresenter(formIntegerDemo, this);
-        _hideMenu = hideMenu;
-        if (_hideMenu) _window.Hide();
-        window.ToCenterOfScreen();
-        window.Show();
+        RunWindowCore(hideMenu, window);
         return window;
     }
 
@@ -58,12 +55,9 @@ public class ApplicationController : IApplicationController
     {
         var formThreadDemo = _viewLoader.CreateThreadDemoView();
         IWindowWrapper window = formThreadDemo.Window;
-        _hideMenu = hideMenu;
         ThreadDemoModel model = new ThreadDemoModel();
         var unused = new ThreadDemoPresenter(formThreadDemo, model, this);
-        if (_hideMenu) _window.Hide();
-        window.ToCenterOfScreen();
-        window.Show();
+        RunWindowCore(hideMenu, window);
         return window;
     }
 
@@ -74,6 +68,19 @@ public class ApplicationController : IApplicationController
     {
         if (_hideMenu) _window.Show();
         ExitEvent?.Invoke(this);
+    }
+
+    #endregion
+
+    #region Private Methods
+
+    private void RunWindowCore(bool hideMenu,IWindowWrapper window)
+    {
+        _hideMenu = hideMenu;
+        if (_hideMenu) _window.Hide();
+        window.Show();
+        window.Activate();
+        window.ToCenterOfScreen();
     }
 
     #endregion

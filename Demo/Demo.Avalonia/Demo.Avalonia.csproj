@@ -1,0 +1,58 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net9.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+        <ApplicationManifest>app.manifest</ApplicationManifest>
+        <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+        <!-- Включение режима единого файла: -->
+        <PublishSingleFile>true</PublishSingleFile>
+        <!-- Включение режима обрезки: -->
+        <PublishTrimmed>true</PublishTrimmed>
+        <PublishAot>true</PublishAot>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Avalonia" Version="11.2.1"/>
+        <PackageReference Include="Avalonia.Desktop" Version="11.2.1"/>
+        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.2.1"/>
+        <PackageReference Include="Avalonia.Fonts.Inter" Version="11.2.1"/>
+        <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+        <PackageReference Include="Avalonia.Diagnostics" Version="11.2.1">
+            <IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
+            <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
+        </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\Libraries\GuiHelpers.Abstractions\GuiHelpers.Abstractions.csproj">
+          <!-- Не встраивать сборку, а положить рядом: -->
+          <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      </ProjectReference>
+      <ProjectReference Include="..\..\Libraries\GuiHelpers.Avalonia\GuiHelpers.Avalonia.csproj">
+          <!-- Не встраивать сборку, а положить рядом: -->
+          <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      </ProjectReference>
+      <ProjectReference Include="..\Demo.Shared\Demo.Shared.csproj">
+          <!-- Не встраивать сборку, а положить рядом: -->
+          <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      </ProjectReference>
+      <ProjectReference Include="..\..\Libraries\GuiHelpers.Logic\GuiHelpers.Logic.csproj">
+          <!-- Не встраивать сборку, а положить рядом: -->
+          <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      </ProjectReference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="GUI\MenuWindow.axaml.cs">
+        <DependentUpon>MainWindow.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+      <UpToDateCheckInput Remove="ResoursesAndStyles\TextBoxResources.axaml" />
+      <UpToDateCheckInput Remove="ResoursesAndStyles\TextBoxStyles.axaml" />
+    </ItemGroup>
+</Project>

@@ -1,12 +1,10 @@
-﻿using System;
-using System.Windows;
-using System.Windows.Controls;
-using GuiHelpers.WPF.GuiHelpers;
+﻿using Avalonia.Controls;
+using GuiHelpers.Avalonia.GuiHelpers;
 using Wrappers;
 
-namespace GuiHelpers.WPF.Wrappers;
+namespace GuiHelpers.Avalonia.Wrappers;
 
-public class WButtonWrapper : WSharedWrapper, IButtonWrapper
+public class AButtonWrapper : ASharedWrapper, IButtonWrapper
 {
     #region Private Fields
 
@@ -16,7 +14,7 @@ public class WButtonWrapper : WSharedWrapper, IButtonWrapper
         
     #region Constructor
 
-    public WButtonWrapper(Button button)
+    public AButtonWrapper(Button button)
     {
         _button = button;
         SubscribeToEvents(true);
@@ -26,7 +24,7 @@ public class WButtonWrapper : WSharedWrapper, IButtonWrapper
 
     #region Destructor
 
-    ~WButtonWrapper()
+    ~AButtonWrapper()
     {
         SubscribeToEvents(false);
     }
@@ -55,14 +53,14 @@ public class WButtonWrapper : WSharedWrapper, IButtonWrapper
     
     public GuiColor BackColor
     {
-        get => WColorConverter.ColorToGui(_button.Background);
-        set => _button.Background = WColorConverter.GuiToColor(value);
+        get => AColorConverter.ColorToGui(_button.Background);
+        set => _button.Background = AColorConverter.GuiToColor(value);
     }
 
     public GuiColor ForeColor
     {
-        get => WColorConverter.ColorToGui(_button.Foreground);
-        set => _button.Foreground = WColorConverter.GuiToColor(value);
+        get => AColorConverter.ColorToGui(_button.Foreground);
+        set => _button.Foreground = AColorConverter.GuiToColor(value);
     }
 
     #endregion
@@ -89,7 +87,7 @@ public class WButtonWrapper : WSharedWrapper, IButtonWrapper
 
     #region Control Event Handler
 
-    private void ButtonOnClick(object sender, EventArgs e)
+    private void ButtonOnClick(object? sender, EventArgs e)
     {
         Click?.Invoke(this);
     }

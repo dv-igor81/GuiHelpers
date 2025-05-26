@@ -17,11 +17,11 @@ namespace GuiHelpers.Demo
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             
-            var mainForm = new FormMenu();
-            
+            FormMenu mainForm = new FormMenu();
             IViewLoader viewLoader = new ViewLoader();
             IApplicationController appController = new ApplicationController(mainForm, viewLoader);
             var unused = new MenuPresenter(mainForm, appController);
+            
             Application.Run(mainForm);
         }
     }

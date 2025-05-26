@@ -40,7 +40,7 @@ public partial class FormMenu : Form, IMenuView
     
     private void Init()
     {
-        StartPosition = FormStartPosition.CenterScreen;
+        //StartPosition = FormStartPosition.CenterScreen;
         MaximizeBox = false;
         FormBorderStyle = FormBorderStyle.FixedDialog;
     }

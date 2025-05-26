@@ -5,16 +5,27 @@ namespace GuiHelpers.Demo.MVP.Presenters;
 
 public class IntegerDemoPresenter
 {
+    #region Private Fields
+
     private readonly IWindowWrapper _window;
     private readonly ILabelWrapper _displayLabel;
     
+    // ReSharper disable once NotAccessedField.Local
     private readonly ITextLineHelper _textLineHelper;
+    // ReSharper disable once NotAccessedField.Local
     private readonly ITextLineHelper _textLineHelper2;
+    // ReSharper disable once NotAccessedField.Local
     private readonly ITextHelperInteger _textHelperInteger;
+    // ReSharper disable once NotAccessedField.Local
     private readonly ITextHelperInteger _textHelperInteger2;
+    // ReSharper disable once NotAccessedField.Local
     private readonly ITextHelperInteger _textHelperInteger3;
     
     private readonly IApplicationController _appController;
+
+    #endregion
+    
+    #region Constructor
     
     public IntegerDemoPresenter(
         IIntegerDemoView view, 
@@ -29,16 +40,14 @@ public class IntegerDemoPresenter
         _textHelperInteger2 = CreateTextHelperInteger(view.TextHelperInteger2,50, 256, 65);
         _textHelperInteger3 = CreateTextHelperInteger(view.TextHelperInteger3,-256, -50, -65);
         
-        //_textHelperInteger.Integer = 55;
-        //_textHelperInteger2.Integer = 65;
-        //_textHelperInteger3.Integer = -65;
-        
         _appController = appController;
         
         _window.SetCapture("Демонстрация ввода чисел");
         
         _window.ClosingEvent += WindowOnClosingEvent;
     }
+    
+    #endregion
     
     private ITextLineHelper CreateTextLineHelper(ITextBoxWrapper wrapper, int maxTextLength)
     {

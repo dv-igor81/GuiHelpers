@@ -1,11 +1,10 @@
-﻿using System;
-using System.Windows.Controls;
-using GuiHelpers.WPF.GuiHelpers;
+﻿using Avalonia.Controls;
+using GuiHelpers.Avalonia.GuiHelpers;
 using Wrappers;
 
-namespace GuiHelpers.WPF.Wrappers;
+namespace GuiHelpers.Avalonia.Wrappers;
 
-public class WCheckBoxWrapper : WSharedWrapper, ICheckBoxWrapper
+public class ACheckBoxWrapper : ASharedWrapper, ICheckBoxWrapper
 {
     #region Private Fields
 
@@ -41,14 +40,14 @@ public class WCheckBoxWrapper : WSharedWrapper, ICheckBoxWrapper
     
     public GuiColor BackColor
     {
-        get => WColorConverter.ColorToGui(_checkBox.Background);
-        set => _checkBox.Background = WColorConverter.GuiToColor(value);
+        get => AColorConverter.ColorToGui(_checkBox.Background);
+        set => _checkBox.Background = AColorConverter.GuiToColor(value);
     }
 
     public GuiColor ForeColor
     {
-        get => WColorConverter.ColorToGui(_checkBox.Foreground);
-        set => _checkBox.Foreground = WColorConverter.GuiToColor(value);
+        get => AColorConverter.ColorToGui(_checkBox.Foreground);
+        set => _checkBox.Foreground = AColorConverter.GuiToColor(value);
     }
 
     #endregion
@@ -64,7 +63,7 @@ public class WCheckBoxWrapper : WSharedWrapper, ICheckBoxWrapper
 
     #region Constructor
 
-    public WCheckBoxWrapper(CheckBox checkBox)
+    public ACheckBoxWrapper(CheckBox checkBox)
     {
         _checkBox = checkBox;
         SubscribeToEvents(true);
@@ -74,7 +73,7 @@ public class WCheckBoxWrapper : WSharedWrapper, ICheckBoxWrapper
 
     #region Destructor
     
-    ~WCheckBoxWrapper()
+    ~ACheckBoxWrapper()
     {
         SubscribeToEvents(false);
     }
@@ -85,21 +84,19 @@ public class WCheckBoxWrapper : WSharedWrapper, ICheckBoxWrapper
     
     protected override void Subscribe()
     {
-        _checkBox.Checked += CheckBoxOnCheckedChanged;
-        _checkBox.Unchecked += CheckBoxOnCheckedChanged;
+        _checkBox.IsCheckedChanged += CheckBoxOnCheckedChanged;
     }
     
     protected override void Unsubscribe()
     {
-        _checkBox.Checked -= CheckBoxOnCheckedChanged;
-        _checkBox.Unchecked -= CheckBoxOnCheckedChanged;
+        _checkBox.IsCheckedChanged += CheckBoxOnCheckedChanged;
     }
 
     #endregion
 
     #region Private Event Handler
     
-    private void CheckBoxOnCheckedChanged(object sender, EventArgs e)
+    private void CheckBoxOnCheckedChanged(object? sender, EventArgs e)
     {
         CheckedChanged?.Invoke(this);
     }

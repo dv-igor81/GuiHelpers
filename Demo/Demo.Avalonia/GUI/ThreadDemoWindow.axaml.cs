@@ -1,9 +1,12 @@
-﻿using System.Windows;
+﻿using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Markup.Xaml;
+using GuiHelpers;
+using GuiHelpers.Avalonia.Wrappers;
 using GuiHelpers.Demo.MVP.Views;
-using GuiHelpers.WPF.Wrappers;
 using Wrappers;
 
-namespace Demo.WPF.GUI;
+namespace Demo.Avalonia.GUI;
 
 public partial class ThreadDemoWindow : Window, IThreadDemoView
 {
@@ -23,9 +26,9 @@ public partial class ThreadDemoWindow : Window, IThreadDemoView
     {
         InitializeComponent();
         
-        Window = new WWindowWrapper(this);
-        StartStopButton = new WButtonWrapper(StartStop);
-        DisplayModeWork = new WLabelWrapper(DisplayMode);
+        Window = new AWindowWrapper(this);
+        StartStopButton = new AButtonWrapper(StartStop);
+        DisplayModeWork = new ALabelWrapper(DisplayMode);
     }
     
     #endregion

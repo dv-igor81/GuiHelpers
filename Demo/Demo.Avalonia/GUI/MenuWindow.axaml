@@ -1,0 +1,15 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="525" d:DesignHeight="350"
+        Width="525" Height="350"
+        x:Class="Demo.Avalonia.GUI.MenuWindow"
+        Title="Demo.Avalonia">
+    <StackPanel Orientation="Vertical" Margin="5">
+        <Button x:Name="IntHelper" Margin="2">Демонстрация IntHelper</Button>
+        <Button x:Name="ThreadHelper" Margin="2">Демонстрация Thread</Button>
+        <Button x:Name="CloseForm" Margin="2">Закрыть форму</Button>
+        <CheckBox x:Name="HideMenu" Margin="2">Hide Menu Window</CheckBox>
+    </StackPanel>
+</Window>

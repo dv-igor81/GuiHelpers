@@ -305,8 +305,9 @@ public class TextLineHelper : BackDelKeys, ITextLineHelper
         }
         _savedText = text;
         _previousText = _savedText;
-        _textBoxWrapper.Text = _savedText;
         _savedSelectionStart = selectionStart;
+        
+        _textBoxWrapper.Text = _savedText;
         _textBoxWrapper.SelectionStart = _savedSelectionStart;
     }
     

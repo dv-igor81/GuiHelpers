@@ -24,6 +24,8 @@ public partial class IntegerDemoWindow : IIntegerDemoView
 
     #endregion
     
+    #region Constructor
+    
     public IntegerDemoWindow()
     {
         InitializeComponent();
@@ -36,4 +38,6 @@ public partial class IntegerDemoWindow : IIntegerDemoView
         TextHelperInteger2 = new WTextBoxWrapper(TextBoxTextHelperInteger2);
         TextHelperInteger3 = new WTextBoxWrapper(TextBoxTextHelperInteger3);
     }
+    
+    #endregion
 }

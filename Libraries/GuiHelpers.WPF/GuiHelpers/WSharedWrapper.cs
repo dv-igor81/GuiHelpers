@@ -3,9 +3,9 @@ using System.Windows.Controls;
 
 namespace GuiHelpers.WPF.GuiHelpers;
 
-public abstract class SharedWrapper : SubscribeHelper
+public abstract class WSharedWrapper : SubscribeHelper
 {
-    protected SharedWrapper()
+    protected WSharedWrapper()
     {
         BackKey = '\b';
         DelKey = (char)(BackKey - 1);

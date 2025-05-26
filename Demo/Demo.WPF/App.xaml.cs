@@ -14,12 +14,10 @@ namespace Demo.WPF
         {
             base.OnStartup(e);
 
-            var mainView = new MenuWindow();
+            MenuWindow mainView = new MenuWindow();
             IViewLoader viewLoader = new ViewLoader();
             IApplicationController appController = new ApplicationController(mainView, viewLoader);
             var unused = new MenuPresenter(mainView, appController);
-            
-            mainView.Show();
         }
     }
 }

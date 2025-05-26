@@ -1,4 +1,5 @@
-﻿using GuiHelpers.Demo.MVP.Models;
+﻿using System.Threading;
+using GuiHelpers.Demo.MVP.Models;
 using GuiHelpers.Demo.MVP.Views;
 using Wrappers;
 
@@ -78,7 +79,11 @@ public class ThreadDemoPresenter
 
     private void ModelOnDisplayEvent(string text, GuiColor guiColor)
     {
+        //Stopwatch sw = new Stopwatch();
+        //sw.Start();
         _window.BeginInvokeEx(DisplayEventHandler, text, guiColor);
+        //sw.Stop();
+        //Console.WriteLine($"\n{text}: {sw.ElapsedMilliseconds}ms");
     }
 
     private void ModelOnStartStopEvent(string text)
@@ -92,6 +97,7 @@ public class ThreadDemoPresenter
 
     private void DisplayEventHandler(string text, GuiColor guiColor)
     {
+        //Thread.Sleep(200);
         _displayModeWork.Text = text;
         _displayModeWork.BackColor = guiColor;
     }

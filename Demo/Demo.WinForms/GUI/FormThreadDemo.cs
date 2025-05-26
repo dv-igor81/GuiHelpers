@@ -30,7 +30,7 @@ public partial class FormThreadDemo : Form, IThreadDemoView
 
     private void Init()
     {
-        StartPosition = FormStartPosition.CenterScreen;
+        //StartPosition = FormStartPosition.CenterScreen;
         MaximizeBox = false;
         FormBorderStyle = FormBorderStyle.FixedDialog;
     }

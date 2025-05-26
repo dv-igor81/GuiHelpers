@@ -46,7 +46,7 @@ public partial class FormIntegerDemo : Form, IIntegerDemoView
 
     private void Init()
     {
-        StartPosition = FormStartPosition.CenterScreen;
+        //StartPosition = FormStartPosition.CenterScreen;
         MaximizeBox = false;
         FormBorderStyle = FormBorderStyle.FixedDialog;
         label_Display.Text = string.Empty;
